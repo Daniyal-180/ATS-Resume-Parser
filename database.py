@@ -27,13 +27,10 @@ def init_db():
 def save_resume_to_db(name, phone, email, education, filename, filedata, skills, exp_data, total_exp):
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
-
-    exp_json = json.dumps(exp_data) if exp_data else None
-
     cursor.execute("""
         INSERT INTO resumes (name, phone, email, education, filename, filedata, skills, exp_data, total_exp)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (name, phone, email, education, filename, filedata, skills, exp_json, total_exp))
+    """, (name, phone, email, education, filename, filedata, skills, exp_data, total_exp))
 
     conn.commit()
     conn.close()
@@ -43,7 +40,7 @@ def fetch_all_resumes():
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, phone, email, education, filename, skills, exp_data FROM resumes")
+    cursor.execute("SELECT id, name, phone, email, education, filename, skills, exp_data, total_exp FROM resumes")
     rows = cursor.fetchall()
     conn.close()
     result = [dict(row) for row in rows]
@@ -111,5 +108,3 @@ def drop_table(db_path, table_name):
         print("❌ Error:", e)
     finally:
         conn.close()
-
-fetch_all_resumes()

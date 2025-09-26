@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, render_template
+import json
 import os
 from werkzeug.utils import secure_filename
 from database import init_db, save_resume_to_db, fetch_all_resumes
@@ -64,11 +65,13 @@ def parse_resume():
             exp_dict = extract_experience_dict(exp_text)
             skills = sections.get("skills", "")
             education = extract_highest_education(sections.get("education", ""))
-            total_exp = calculate_total_experience(exp_dict)
+            exp_json = json.dumps(exp_dict) if exp_dict else None
+            total_exp = calculate_total_experience(exp_json)
+
 
             # Save all info to database
             with open(save_path, "rb") as file_obj:
-                save_resume_to_db(name, phone, email, education, f.filename, file_obj.read(), skills, exp_dict, total_exp)
+                save_resume_to_db(name, phone, email, education, f.filename, file_obj.read(), skills, exp_json, total_exp)
 
             results.append({
                 "filename": f.filename,

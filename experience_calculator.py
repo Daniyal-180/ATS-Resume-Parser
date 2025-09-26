@@ -9,6 +9,7 @@ DATE_RANGE_REGEX = re.compile(
     r"|([A-Za-z]{3,9}[\s\-]?\d{4})\s*[-–]\s*([A-Za-z]{3,9}[\s\-]?\d{4}|present|current|now|till\sdate|ongoing)"
     r"|(\d{4})\s*[-–]\s*(\d{4}|present|current|now|till\sdate|ongoing)"
     r"([A-Za-z]{3,9}\d{4})\s*[-–]\s*([A-Za-z]{3,9}\d{4}|present|current|now|till\sdate|ongoing)"
+    r"\b(\d{4})\s*[-–]\s*(present|current|now|till\sdate|ongoing)\b"
     r"([A-Za-z]{3,9}\s+\d{4})\s*[-–]\s*([A-Za-z]{3,9}\s+\d{4}|present|current|now|till\sdate|ongoing)"
     r"\b(\d{4})(?:\s*[–-]\s*(\d{4}))?\b"
     r")",

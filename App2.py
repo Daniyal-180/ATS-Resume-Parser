@@ -135,11 +135,11 @@ resume_headings_base = {
     "profile": ["profile", "summary", "objective", "career objective", "about me","about myself", "PROFILE INFO" , "PROFESSIONAL SUMMARY"],
     "experience": ["experience", "professional experience", "work experience", "work experiences",
                    "employment history", "career history", "internship experience"],
-    "education": ["education","education background", "academic background", "academic history",
+    "education": ["education","education background", "academic background", "academic history", "academic experience",
                   "qualifications", "education and training", "educational background"],
     "skills": ["skills", "technical skills", "key skills", "expertise skills",
                "core competencies", "soft skills", "expertise", "digital skills"],
-    "projects": ["projects","project", "academic projects", "personal projects"],
+    "projects": ["projects","project", "academic projects", "personal projects", "project experience"],
     "certifications": ["certifications", "certification", "certificates",
                        "licenses & certifications", "training & certifications","certifications and licenses","certifications and courses",
                         "certifications & licenses",
@@ -247,8 +247,7 @@ def normalize_sections(sections, base_dict):
 # Run as Script
 # -----------------------------
 if __name__ == "__main__":
-    pdf_path = r"C:\Users\user\PycharmProjects\ATS\Resume\ResumeMuhammadNajamUlHassan.pdf"  # Replace with your PDF path
-
+    pdf_path = r"C:\Users\user\PycharmProjects\ATS\Resume\Hadia Tassadaq - Resume.pdf"  # Replace with your PDF path
     contact_info = extract_contact_info(pdf_path)
     print("=== Contact Info ===")
     print(f"Name: {contact_info['name']}")
@@ -256,6 +255,7 @@ if __name__ == "__main__":
     print(f"Phone: {contact_info['phone']}")
 
     text_to_search = extract_resume_text(pdf_path)
+    print(f"Text to search: {text_to_search}")
     sections = extract_all_sections(text_to_search)
 
     sections = clean_section_dict(sections)
@@ -267,7 +267,7 @@ if __name__ == "__main__":
     edu = extract_highest_education(sections.get("education"))
 
 
-
-    print("=== Extracted Resume Sections ===")
-    for sec, content in sections.items():
-        print(f"\n{sec.upper()}\n{content if content else 'No content found.'}")
+    #
+    # print("=== Extracted Resume Sections ===")
+    # for sec, content in sections.items():
+    #     print(f"\n{sec.upper()}\n{content if content else 'No content found.'}")

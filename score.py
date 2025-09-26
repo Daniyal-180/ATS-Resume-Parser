@@ -62,7 +62,3 @@ def calculate_scores_for_all_resumes(jd_dict):
     # Sort by score descending
     # results.sort(key=lambda x: x["experience_score"], reverse=True)
     return results
-
-jd_dict = {'skills': 'Communication, Attention to Detail', 'min_experience': 2, 'education': ['BACHELOR']}
-resumes = fetch_all_resumes()
-print(calculate_scores_for_all_resumes(jd_dict))
