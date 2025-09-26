@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Description Parser</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='jd_styles.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Job Description Parser</h1>
+  </header>
+
+  <main class="main-container">
+    <!-- Left Panel: JD Upload -->
+    <section class="card">
+      <h2>Upload Job Description</h2>
+      <form id="jdForm" method="POST" action="/jd_parser" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="jdFile">Upload JD (PDF/DOCX)</label>
+          <input type="file" id="jdFile" name="jdFile" accept=".pdf,.docx">
+        </div>
+
+        <div class="form-group">
+          <label for="jdText">Or Paste JD Text</label>
+          <textarea id="jdText" name="jdText" rows="8" placeholder="Paste job description text here...">{{ request.form.jdText or '' }}</textarea>
+        </div>
+
+        <button type="submit" class="btn">Parse JD</button>
+      </form>
+    </section>
+
+    <!-- Right Panel: Resume Results -->
+    <section class="card">
+      <h2>Matched Resumes</h2>
+      {% if matched_resumes %}
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Phone</th>
+              <th>email</th>
+            <th>Skill Score</th>
+              <th>Experience Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for resume in matched_resumes %}
+          <tr>
+            <td>{{ resume.name }}</td>
+            <td>{{ resume.phone }}</td>
+              <td>{{ resume.email }}</td>
+            <td>{{ resume.skills_score }}</td>
+              <td>{{ resume.experience_score }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>No matching resumes found.</p>
+      {% endif %}
+    </section>
+  </main>
+</body>
+</html>

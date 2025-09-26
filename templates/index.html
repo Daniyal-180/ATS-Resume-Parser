@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ATS Resume Parser</title>
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>📃 ATS Resume Parser</h1>
+        <p class="muted">Drop resume PDFs — we'll extract contact info & sections.</p>
+      </div>
+      <div class="mini">Ready • <span id="status-small" class="muted">idle</span></div>
+    </header>
+
+    <div class="split">
+  <!-- Row: Upload + Tips -->
+  <div class="row">
+    <div id="uploadCard" class="upload-area card">
+      <h3>Upload resumes</h3>
+      <p class="meta">Supported format: PDF</p>
+
+      <div style="margin-top:12px">
+        <label class="btn" for="fileInput">Choose file(s)</label>
+        <input id="fileInput" type="file" name="file" accept=".pdf" multiple />
+        <button id="clearBtn" class="btn ghost" style="margin-left:8px">Clear</button>
+      </div>
+
+      <div id="dropHint" class="meta" style="margin-top:12px">Or drag & drop files here</div>
+    </div>
+
+    <div class="card tips-card">
+      <strong>Tips</strong>
+      <ul class="muted">
+        <li>Upload multiple resumes at once to parse them in bulk.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Row: Parsed output -->
+  <div id="resultsWrap" class="card">
+    <div class="flex-between">
+      <h3 style="margin:0">Parsed Output</h3>
+      <div class="mini muted">Response preview</div>
+    </div>
+
+    <div id="noData" class="muted">No parsed data yet. Upload files to see results.</div>
+
+    <div id="results" style="display:none;margin-top:12px">
+      <div class="results">
+        <div id="contactFields"></div>
+        <div id="sectionsList"></div>
+      </div>
+    </div>
+
+    <div class="progress" aria-hidden="true" title="upload progress" style="visibility:hidden;margin-top:12px">
+      <i id="progressBar"></i>
+    </div>
+  </div>
+</div>
+
+
+    <footer class="muted">
+      Built for your ATS project — adjust the `/parse` endpoint in the JS to match your Flask route.
+    </footer>
+  </div>
+
+  <!-- External JS -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
