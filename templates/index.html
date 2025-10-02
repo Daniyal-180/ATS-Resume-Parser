@@ -4,18 +4,63 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ATS Resume Parser</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   <!-- Link to external CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
   <div class="container">
-    <header>
-      <div>
-        <h1>📃 ATS Resume Parser</h1>
-        <p class="muted">Drop resume PDFs — we'll extract contact info & sections.</p>
+       <!-- ✅ Modern Sticky Navbar -->
+  <nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex items-center justify-between py-3">
+
+        <!-- Logo / Brand -->
+        <div class="text-xl font-bold tracking-wide">ATS Dashboard</div>
+
+        <!-- Desktop Menu -->
+        <ul class="hidden md:flex space-x-8 text-sm font-medium">
+          <li><a href="/" class="relative py-2 transition hover:text-yellow-300 {% if request.path == '/' %}text-yellow-300{% endif %}">Upload Resumes</a></li>
+          <li><a href="/data" class="relative py-2 transition hover:text-yellow-300 {% if request.path == '/data' %}text-yellow-300{% endif %}">Resume Database</a></li>
+          <li><a href="/jd_parser" class="relative py-2 transition hover:text-yellow-300 {% if request.path == '/jd_parser' %}text-yellow-300{% endif %}">Job Match</a></li>
+        </ul>
+
+        <!-- Hamburger (mobile) -->
+        <button id="menuBtn" class="md:hidden flex flex-col space-y-1 focus:outline-none">
+          <span class="w-6 h-0.5 bg-white transition"></span>
+          <span class="w-6 h-0.5 bg-white transition"></span>
+          <span class="w-6 h-0.5 bg-white transition"></span>
+        </button>
       </div>
-      <div class="mini">Ready • <span id="status-small" class="muted">idle</span></div>
-    </header>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="menuLinks" class="hidden md:hidden bg-white text-gray-700 shadow-lg rounded-b-xl">
+      <ul class="flex flex-col p-4 space-y-3">
+        <li><a href="/" class="block py-2 px-3 rounded-md hover:bg-gray-100 {% if request.path == '/' %}bg-gray-200 font-semibold{% endif %}">Upload Resumes</a></li>
+        <li><a href="/data" class="block py-2 px-3 rounded-md hover:bg-gray-100 {% if request.path == '/data' %}bg-gray-200 font-semibold{% endif %}">Resume Database</a></li>
+        <li><a href="/jd_parser" class="block py-2 px-3 rounded-md hover:bg-gray-100 {% if request.path == '/jd_parser' %}bg-gray-200 font-semibold{% endif %}">Job Match</a></li>
+      </ul>
+    </div>
+  </nav>
+  <!-- ✅ End Navbar -->
+    <header class="text-center mb-8 px-4 sm:px-0">
+  <div>
+    <h1 class="text-3xl sm:text-4xl font-extrabold drop-shadow-md">
+      <span>📃</span>
+      <span class="bg-gradient-to-r from-indigo-500 via-purple-600 to-teal-400 text-transparent bg-clip-text">
+        ATS Resume Parser
+      </span>
+    </h1>
+    <p class="text-gray-700 mt-2 sm:mt-3 text-sm sm:text-base">
+      Drop resume PDFs — we'll extract contact info & sections.
+    </p>
+  </div>
+  <div class="mini text-gray-500 mt-2">
+    Ready • <span id="status-small" class="muted">idle</span>
+  </div>
+</header>
+
 
     <div class="split">
   <!-- Row: Upload + Tips -->

@@ -1,0 +1,217 @@
+:root {
+  --accent: #2563eb;
+  --muted: #6b7280;
+  --card: #ffffff;
+  --bg: #f3f4f6;
+  --danger: #ef4444;
+}
+
+/* Global reset & container */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, Segoe UI, Helvetica, Arial, sans-serif;
+  background: url("bd image.jpeg") no-repeat center center fixed;
+  background-size: cover;
+  color: #111;
+  padding: 20px;
+}
+body::before {
+  content: "";
+  position: fixed;
+  top:0; left:0; width:100%; height:100%;
+  background-color: rgba(255,255,255,0.2);
+  z-index: -1;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.0);
+  border-radius: 10px;
+  display: grid;
+  gap: 20px;
+}
+
+/* Cards */
+.card {
+  background-color: rgba(255,255,255,0.85);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+  border: 1px solid rgba(15,23,42,0.03);
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* Buttons */
+/* Modern Gradient Buttons */
+.btn {
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: none;
+  background: linear-gradient(90deg, #2563eb, #6b21a8);
+  color: #fff;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover Effect: Slight scale + gradient animation */
+.btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
+  background: linear-gradient(270deg, #6b21a8, #2563eb);
+  background-size: 200% 100%;
+  animation: btnGradient 1.5s linear infinite;
+}
+
+/* Ghost / secondary button */
+/* Modern Gradient Buttons */
+.btn {
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: none;
+  background: linear-gradient(90deg, #06b6d4, #9333ea); /* teal → purple */
+  color: #fff;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover Effect: Slight scale + gradient animation */
+.btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(99, 102, 241, 0.3);
+  background: linear-gradient(270deg, #9333ea, #06b6d4); /* reverse gradient */
+  background-size: 200% 100%;
+  animation: btnGradient 1.5s linear infinite;
+}
+
+/* Ghost / secondary button */
+.btn.ghost {
+  background: transparent;
+  color: #06b6d4;
+  border: 2px solid #06b6d4;
+}
+.btn.ghost:hover {
+  color: #fff;
+  background: linear-gradient(90deg, #06b6d4, #9333ea);
+  border-color: transparent;
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(99, 102, 241, 0.3);
+  animation: btnGradient 1.5s linear infinite;
+}
+
+/* Gradient animation keyframes */
+@keyframes btnGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .btn, .btn.ghost {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+
+
+/* Table */
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+.table-container th {
+  padding: 16px;
+  text-align: left;
+}
+.table-container td {
+  padding: 14px;
+}
+.table-container tbody tr:hover {
+  background-color: #ebf8ff;
+}
+.table-container tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Responsive tables */
+@media (max-width: 900px) {
+  .table-container table, thead, tbody, th, td, tr { display: block; }
+  thead { display: none; }
+  tr {
+    margin-bottom: 12px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 12px;
+  }
+  td {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 0.95rem;
+  }
+  td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #555;
+  }
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  font-size: 0.9rem;
+  background-color: rgba(255,255,255,0.8);
+  border-radius: 8px; padding: 6px;
+}
+
+/* Headers */
+/*header h1 {*/
+/*  font-size: 1.8rem;*/
+/*}*/
+/*header p {*/
+/*  font-size: 0.95rem;*/
+/*  color: var(--muted);*/
+/*}*/
+
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 15px;
+  background-color: rgba(255,255,255,0.50);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+header h1 {
+  font-size: 1.75rem;
+  margin-bottom: 4px;
+}
+
+header p {
+  font-size: 0.95rem;
+  color: var(--muted);
+}

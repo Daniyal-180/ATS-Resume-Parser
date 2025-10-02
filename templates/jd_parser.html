@@ -4,62 +4,149 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Job Description Parser</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='jd_styles.css') }}">
 </head>
 <body>
-  <header>
-    <h1>Job Description Parser</h1>
-  </header>
+  <div class="container">
+    <!-- ✅ Modern Sticky Navbar -->
+    <nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex items-center justify-between py-3">
 
-  <main class="main-container">
-    <!-- Left Panel: JD Upload -->
-    <section class="card">
-      <h2>Upload Job Description</h2>
-      <form id="jdForm" method="POST" action="/jd_parser" enctype="multipart/form-data">
-        <div class="form-group">
-          <label for="jdFile">Upload JD (PDF/DOCX)</label>
-          <input type="file" id="jdFile" name="jdFile" accept=".pdf,.docx">
+          <!-- Logo / Brand -->
+          <div class="text-xl font-bold tracking-wide">ATS Dashboard</div>
+
+          <!-- Desktop Menu -->
+          <ul class="hidden md:flex space-x-8 text-sm font-medium">
+            <li><a href="/" class="relative py-2 transition hover:text-yellow-300 {% if request.path == '/' %}text-yellow-300{% endif %}">Upload Resumes</a></li>
+            <li><a href="/data" class="relative py-2 transition hover:text-yellow-300 {% if request.path == '/data' %}text-yellow-300{% endif %}">Resume Database</a></li>
+            <li><a href="/jd_parser" class="relative py-2 transition hover:text-yellow-300 {% if request.path == '/jd_parser' %}text-yellow-300{% endif %}">Job Match</a></li>
+          </ul>
+
+          <!-- Hamburger (mobile) -->
+          <button id="menuBtn" class="md:hidden flex flex-col space-y-1 focus:outline-none">
+            <span class="w-6 h-0.5 bg-white transition"></span>
+            <span class="w-6 h-0.5 bg-white transition"></span>
+            <span class="w-6 h-0.5 bg-white transition"></span>
+          </button>
         </div>
+      </div>
 
-        <div class="form-group">
-          <label for="jdText">Or Paste JD Text</label>
-          <textarea id="jdText" name="jdText" rows="8" placeholder="Paste job description text here...">{{ request.form.jdText or '' }}</textarea>
-        </div>
+      <!-- Mobile Menu -->
+      <div id="menuLinks" class="hidden md:hidden bg-white text-gray-700 shadow-lg rounded-b-xl">
+        <ul class="flex flex-col p-4 space-y-3">
+          <li><a href="/" class="block py-2 px-3 rounded-md hover:bg-gray-100 {% if request.path == '/' %}bg-gray-200 font-semibold{% endif %}">Upload Resumes</a></li>
+          <li><a href="/data" class="block py-2 px-3 rounded-md hover:bg-gray-100 {% if request.path == '/data' %}bg-gray-200 font-semibold{% endif %}">Resume Database</a></li>
+          <li><a href="/jd_parser" class="block py-2 px-3 rounded-md hover:bg-gray-100 {% if request.path == '/jd_parser' %}bg-gray-200 font-semibold{% endif %}">Job Match</a></li>
+        </ul>
+      </div>
+    </nav>
+    <!-- ✅ End Navbar -->
 
-        <button type="submit" class="btn">Parse JD</button>
-      </form>
-    </section>
+    <!-- Header -->
+    <header class="text-center mb-8 px-4 sm:px-0">
+      <h1 class="text-3xl sm:text-4xl font-extrabold drop-shadow-md">
+        <span class="bg-gradient-to-r from-indigo-500 via-purple-600 to-teal-400 text-transparent bg-clip-text">
+          Job Description Parser
+        </span>
+      </h1>
+      <p class="text-gray-700 mt-2 sm:mt-3 text-sm sm:text-base">
+        Upload job descriptions and find the best matching resumes
+      </p>
+    </header>
 
-    <!-- Right Panel: Resume Results -->
-    <section class="card">
-      <h2>Matched Resumes</h2>
-      {% if matched_resumes %}
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Phone</th>
-              <th>email</th>
-            <th>Skill Score</th>
-              <th>Experience Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for resume in matched_resumes %}
-          <tr>
-            <td>{{ resume.name }}</td>
-            <td>{{ resume.phone }}</td>
-              <td>{{ resume.email }}</td>
-            <td>{{ resume.skills_score }}</td>
-              <td>{{ resume.experience_score }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      {% else %}
-      <p>No matching resumes found.</p>
-      {% endif %}
-    </section>
-  </main>
+    <!-- Main: 30%-70% Card Layout -->
+    <!-- Main: 30%-70% Card Layout -->
+    <div class="split">
+      <div class="row">
+        <!-- Left Card: JD Upload (30%) -->
+        <section class="card left-card">
+          <h2>Upload Job Description</h2>
+          <form id="jdForm" method="POST" action="/jd_parser" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="jdFile">Upload JD (PDF/DOCX)</label>
+              <input type="file" id="jdFile" name="jdFile" accept=".pdf,.docx">
+            </div>
+
+            <div class="form-group">
+              <label for="jdText">Or Paste JD Text</label>
+              <textarea id="jdText" name="jdText" rows="8" placeholder="Paste job description text here...">{{ request.form.jdText or '' }}</textarea>
+            </div>
+
+            <button type="submit" class="btn">Parse JD</button>
+          </form>
+        </section>
+
+        <!-- Right Card: Matched Resumes (70%) -->
+        <section class="card right-card">
+          <h2>Matched Resumes</h2>
+          {% if matched_resumes %}
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Skill Score</th>
+                  <th>Experience Score</th>
+                    <th>Total Score</th>
+                    <th>Download</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for resume in matched_resumes %}
+                <tr>
+                  <td>{{ resume.name }}</td>
+                  <td>{{ resume.phone }}</td>
+                  <td>{{ resume.email }}</td>
+                  <td>{{ resume.skills_score }}</td>
+                  <td>{{ resume.experience_score }}</td>
+                    <td>{{ resume.total_score }}</td>
+                    <td>
+                        <a href="{{ url_for('download_resume', resume_id=resume.id) }}"
+                           class="relative inline-flex items-center justify-center gap-2 px-6 py-2.5
+                                  font-semibold text-white text-sm tracking-wide
+                                  rounded-xl shadow-lg
+                                  bg-gradient-to-r from-blue-500 via-indigo-600 to-blue-700
+                                  hover:from-indigo-600 hover:via-blue-700 hover:to-indigo-800
+                                  transition-all duration-300 ease-out
+                                  hover:scale-105 hover:shadow-xl
+                                  active:scale-100 active:shadow-md
+                                  focus:outline-none focus:ring-4 focus:ring-blue-400/50
+                                  max-sm:block max-sm:w-full max-sm:mt-2">
+
+                           <!-- Glow effect -->
+                           <span class="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400/30 to-indigo-500/30 blur-md opacity-70 -z-10"></span>
+
+
+                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="2" stroke="currentColor"
+                                class="w-5 h-5">
+                             <path stroke-linecap="round" stroke-linejoin="round"
+                                   d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                           </svg>
+                        </a>
+
+                    </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <p>No matching resumes found.</p>
+          {% endif %}
+        </section>
+      </div>
+    </div>
+
+
+    <!-- Results (JS injection) -->
+    <div id="resumeResults" class="results-container"></div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

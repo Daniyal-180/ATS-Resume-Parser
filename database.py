@@ -108,3 +108,26 @@ def drop_table(db_path, table_name):
         print("❌ Error:", e)
     finally:
         conn.close()
+
+
+def fetch_resume_from_db(resume_id: int):
+    """
+    Fetch a resume file by ID from SQLite database.
+
+    Returns:
+        (file_name, file_data) if found, else None
+    """
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+    cursor.execute("SELECT filename, filedata FROM resumes WHERE id = ?", (resume_id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if row:
+        file_name, file_data = row
+        return file_name, file_data
+    return None
+
+# print(fetch_resume_from_db(616))
+
+# delete_all_records()

@@ -1,33 +1,76 @@
 import re
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import json
 
-# Regex pattern to catch most formats
+# ✅ Regex for date ranges only (blocks single years)
+
+MONTHS = (
+    r"Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|"
+    r"May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|"
+    r"Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?"
+)
+
 DATE_RANGE_REGEX = re.compile(
-    r"("
-    r"(\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4})\s*[-–]\s*(\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4}|present|current|now|till\sdate|ongoing)"
-    r"|([A-Za-z]{3,9}[\s\-]?\d{4})\s*[-–]\s*([A-Za-z]{3,9}[\s\-]?\d{4}|present|current|now|till\sdate|ongoing)"
-    r"|(\d{4})\s*[-–]\s*(\d{4}|present|current|now|till\sdate|ongoing)"
-    r"([A-Za-z]{3,9}\d{4})\s*[-–]\s*([A-Za-z]{3,9}\d{4}|present|current|now|till\sdate|ongoing)"
-    r"\b(\d{4})\s*[-–]\s*(present|current|now|till\sdate|ongoing)\b"
-    r"([A-Za-z]{3,9}\s+\d{4})\s*[-–]\s*([A-Za-z]{3,9}\s+\d{4}|present|current|now|till\sdate|ongoing)"
-    r"\b(\d{4})(?:\s*[–-]\s*(\d{4}))?\b"
+    rf"(?P<start>"
+    # --- DD/MM/YYYY ---
+    r"\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4}"
+    r"|"
+    # --- MM/YYYY ---
+    r"\d{1,2}[\/\-.]\d{4}"
+    r"|"
+    # --- Month YYYY / Month, DD, YYYY ---
+    rf"(?:{MONTHS})[.,]?\s*\d{{1,2}},?\s*\d{{2,4}}"
+    r"|"
+    rf"(?:{MONTHS})[.,]?\s*\d{4}"
+    r"|"
+    # --- Month-YYYY / MonthYYYY / Month.YYYY ---
+    rf"(?:{MONTHS})[-.]?\d{{4}}"
+    r"|"
+    # --- Year ---
+    r"\d{4}"
+    r")"
+    r"\s*(?:-|–|to)\s*"
+    r"(?P<end>"
+    # same patterns OR present/current
+    r"\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4}"
+    r"|\d{1,2}[\/\-.]\d{4}"
+    rf"|(?:{MONTHS})[.,]?\s*\d{{1,2}},?\s*\d{{2,4}}"
+    rf"|(?:{MONTHS})[.,]?\s*\d{{4}}"
+    rf"|(?:{MONTHS})[-.]?\d{{4}}"
+    r"|\d{4}"
+    r"|present|current|now|till\sdate|ongoing"
     r")",
     re.IGNORECASE
 )
 
+
+
 # Supported date formats
 DATE_FORMATS = [
+    # Day/Month/Year
     "%d/%m/%Y", "%d-%m-%Y", "%d.%m.%Y",
+    # Month/Year numeric
     "%m/%Y", "%m-%Y", "%m.%Y",
+    # Month name formats
     "%b %Y", "%B %Y",
+    "%b. %Y", "%B. %Y",
+    "%b-%Y", "%B-%Y",
+    "%b%Y", "%B%Y",
+    "%b.%Y", "%B.%Y",
+    # Month Day, Year
+    "%B %d, %Y", "%b %d, %Y",
+    # Compact
+    "%b%Y", "%B%Y",
+    # Year only
     "%Y"
 ]
 
 
+
 def parse_date(date_str):
     """Convert string into datetime object."""
-    date_str = date_str.strip().lower()
+    date_str = date_str.strip().lower().replace("(", "").replace(")", "")
     if date_str in ["current", "present", "now", "till date", "ongoing"]:
         return datetime.today()
     for fmt in DATE_FORMATS:
@@ -38,21 +81,6 @@ def parse_date(date_str):
     return None
 
 
-def extract_date_ranges(block):
-    """Extract ALL date ranges from a block."""
-    matches = DATE_RANGE_REGEX.finditer(block)
-    cleaned = []
-    for m in matches:
-        groups = [g for g in m.groups() if g]
-        if len(groups) >= 2:
-            if len(groups) >= 3:
-                start, end = groups[1], groups[2]
-            else:
-                start, end = groups[0], groups[1]
-            cleaned.append((start, end))
-    return cleaned
-
-
 def extract_job_role(block, match):
     """Extract job role right before this date match."""
     start_idx = match.start()
@@ -60,44 +88,61 @@ def extract_job_role(block, match):
     parts = re.split(r"[.\n]", before_text)
     last_part = parts[-1].strip() if parts else ""
     last_part = re.sub(r"[\[\]\uf1ad•|]", "", last_part)  # remove icons/symbols
-    last_part = re.sub(r"\s{2,}", " ", last_part)  # collapse extra spaces
-
+    last_part = re.sub(r"\s{2,}", " ", last_part)  # collapse spaces
     return last_part.strip() if last_part else "Role not found"
 
 
 def calculate_experience(start, end):
     """Calculate duration between two dates (inclusive of start month)."""
     sd, ed = parse_date(start), parse_date(end)
-    if sd and ed:
-        diff = relativedelta(ed, sd)
-        months = diff.years * 12 + diff.months + 1  # ✅ include start month
-        return f"{months // 12} years {months % 12} months"
-    return "Duration not found"
+    if not sd:
+        return "Duration not found"
+
+        # If end date is missing -> fixed 1 year
+    if not ed:
+        return "1 years 0 months"
+
+        # Otherwise calculate normally
+    diff = relativedelta(ed, sd)
+    months = diff.years * 12 + diff.months
+    return f"{months // 12} years {months % 12} months"
 
 
 def extract_experience_dict(text):
     """Return structured dict with role and experience for all ranges."""
     blocks = [b.strip() for b in text.split("\n\n") if b.strip()]
+
     exp_dict = {}
     exp_counter = 1
 
     for block in blocks:
         for match in DATE_RANGE_REGEX.finditer(block):
-            groups = [g for g in match.groups() if g]
-            if len(groups) >= 2:
-                if len(groups) >= 3:
-                    start, end = groups[1], groups[2]
-                else:
-                    start, end = groups[0], groups[1]
+            start, end = match.group("start"), match.group("end")
+            role = extract_job_role(block, match)
+            exp_value = calculate_experience(start, end)
 
-                role = extract_job_role(block, match)
-                exp_value = calculate_experience(start, end)
+            exp_dict[f"exp_{exp_counter}"] = {
+                "role": role,
+                "start_date": start,
+                "end_date": end,
+                "exp": exp_value
+            }
+            exp_counter += 1
 
-                exp_dict[f"exp_{exp_counter}"] = {
-                    "role": role,
-                    "exp": exp_value
-                }
-                exp_counter += 1
+    for year_match in re.finditer(r"\b(19|20)\d{2}\b", block):
+        year_str = year_match.group(0)
+        # Skip if this year already inside a matched range
+        if any(year_str in m.group(0) for m in DATE_RANGE_REGEX.finditer(block)):
+            continue
+
+        role = extract_job_role(block, year_match)
+        exp_dict[f"exp_{exp_counter}"] = {
+            "role": role,
+            "start_date": year_str,
+            "end_date": "",
+            "exp": "1 years 0 months"  # ✅ auto-assign 1 year
+        }
+        exp_counter += 1
 
     return exp_dict
 
@@ -116,27 +161,24 @@ def calculate_total_experience(exp_data_json):
                 if months_part.isdigit():
                     months = int(months_part)
             total_months += years * 12 + months
-        return total_months / 12  # in years
+        return total_months / 12
     except:
         return 0
 
 
 def extract_highest_education(edu_text):
-    # Normalize text
     edu_text = edu_text.upper()
-
-    # Define education levels in descending priority
-    levels = ["PHD", "MASTER","MS","BS", "M.SC", "MSC", "BACHELOR", "BSCS", "BSC", "INTERMEDIATE", "HSC", "MATRIC", "O-LEVEL",
-              "A-LEVEL"]
-
-    # Search for levels in text
+    levels = [
+        "PHD", "MASTER", "MS", "BS", "M.SC", "MSC",
+        "BACHELOR", "BSCS", "BSC",
+        "INTERMEDIATE", "HSC",
+        "MATRIC", "O-LEVEL", "A-LEVEL"
+    ]
     found_levels = []
     for level in levels:
         if re.search(r'\b' + re.escape(level) + r'\b', edu_text):
             found_levels.append(level)
+    return found_levels[0] if found_levels else "Not Found"
 
-    # Return the first match (highest level)
-    if found_levels:
-        return found_levels[0]
-    else:
-        return "Not Found"
+
+# print(extract_experience_dict("""EXPERIENCE BISTARTX |AIDEVELOPMENTINTERN Feb2025–Mar2025|Remote • AssistedinbuildingAImodelsandautomatingdatapipelines. • AssigntotrainmodelsondifferentDataset AQUAFARM(GOVTSTARTUP) |ASSISTANTDATASCIENTIST 2023 • Collected,organized,andanalyzeddataforfarmyieldpredictions. • PreparedregularreportsinExcelandGoogleSheetsforstakeholders. TOPLINEMARKETINGPVTLTD |SALESEXECUTIVE Sep2021–Feb2022|Islamabad,PK • Communicatedwithcustomersthroughemailanddigitalplatforms. • FollowupswithClients"""))

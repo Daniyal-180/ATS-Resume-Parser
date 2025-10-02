@@ -7,40 +7,43 @@ import docx
 
 SKILLS_DB = [
     # Programming & Core Languages
-    "Python", "Java", "JavaScript", "TypeScript", "C", "C++", "C#", ".NET",
-    "PHP", "Laravel", "Ruby", "Ruby on Rails", "Go", "Golang", "Swift", "Kotlin", "R",
+    "Python", "Java", "JavaScript", "TypeScript", "C", "C++", "C#", ".NET", ".NET Core",
+    "PHP", "Laravel", "Ruby", "Ruby on Rails", "Go", "Golang", "Swift", "SwiftUI", "Kotlin", "R",
     "Rust", "Scala", "Perl", "Lua", "Elixir", "Haskell", "Dart",
 
     # Web & Frontend
-    "HTML", "HTML5", "CSS", "CSS3", "SASS", "SCSS", "LESS", "Bootstrap", "Tailwind CSS",
+    "HTML", "HTML5", "CSS", "CSS3", "SASS", "SCSS", "LESS", "Bootstrap", "Tailwind CSS", "Material UI",
     "React.js", "React Native", "Angular", "Vue.js", "jQuery",
     "Next.js", "Nuxt.js", "Gatsby", "Ember.js", "Backbone.js",
     "Ajax", "JSON", "GSAP Animation",
 
     # Databases & Data Storage
-    "SQL", "NoSQL", "MySQL", "PostgreSQL", "Oracle", "SQLite", "SQL Server",
-    "MongoDB", "Cassandra", "DynamoDB", "Redis", "Memcached", "Elasticsearch",
-    "Firebase", "CouchDB", "Neo4j", "GraphQL", "Amazon Aurora",
+    "SQL", "MySQL", "PostgreSQL", "MongoDB", "Firebase", "NoSQL",
+    "Oracle", "SQLite", "SQL Server", "Cassandra", "DynamoDB",
+    "Redis", "Memcached", "Elasticsearch", "CouchDB", "Neo4j",
+    "GraphQL", "Amazon Aurora",
 
     # Backend / API Development
-    "API Development", "API Integrations", "REST", "REST API", "SOAP", "gRPC", "RESTful APIs"
-    "WebSocket", "Socket.io", "GraphQL API", "Node.js", "Express.js",
+    "API Development", "API Integrations", "REST", "REST API", "SOAP", "gRPC", "RESTful APIs",
+    "WebSocket", "Socket.io", "GraphQL API", "Node.js", "Express.js", "Nest.js",
 
     # Cloud & DevOps / Infrastructure
-    "AWS", "EC2", "S3", "Lambda", "CloudFormation", "Azure", "GCP", "Google Cloud", "DevOps",
+    "AWS", "Azure", "GCP", "Google Cloud", "DevOps",
+    "EC2", "S3", "Lambda", "CloudFormation",
     "Docker", "Kubernetes", "K8s", "Terraform", "Ansible", "Chef", "Puppet",
-    "Jenkins", "Travis CI", "CircleCI", "GitHub Actions", "CI/CD", "Git", "GitHub",
-    "GitLab", "Bitbucket", "Linux", "Ubuntu", "CentOS", "Bash", "Shell Scripting",
-    "PowerShell", "Windows Server", "Nginx", "Apache", "HAProxy", "Load Balancing",
+    "Jenkins", "Travis CI", "CircleCI", "GitHub Actions", "CI/CD", "Git", "GitHub", "GitLab", "Bitbucket",
+    "Linux", "Ubuntu", "CentOS", "Bash", "Shell Scripting", "PowerShell",
+    "Windows Server", "Nginx", "Apache", "HAProxy", "Load Balancing",
     "Message Queues", "RabbitMQ", "Kafka", "ActiveMQ", "SQS", "SNS",
 
     # Data, Analytics, AI / ML / Big Data
     "Excel", "Power BI", "Tableau", "Looker", "Metabase",
     "Apache Spark", "Hadoop", "Hive", "Pig", "Flink",
-    "Pandas", "NumPy", "Scikit-learn", "TensorFlow", "Keras", "PyTorch",
+    "Pandas", "NumPy", "Scikit-learn", "TensorFlow", "Keras", "PyTorch", "OpenCV",
     "XGBoost", "LightGBM", "CatBoost", "Matplotlib", "Seaborn", "Plotly",
-    "Statsmodels", "NLTK", "spaCy", "OpenCV", "Computer Vision", "Deep Learning",
-    "Natural Language Processing","NLP", "Recommender Systems", "Time Series", "Graph ML","ML", "Machine Learning",
+    "Statsmodels", "NLTK", "spaCy", "Computer Vision", "Deep Learning", "DL", "cv2",
+    "Natural Language Processing", "NLP", "Recommender Systems", "Time Series", "Graph ML",
+    "ML", "Machine Learning", "Data Science", "Statistics",
     "AI Automation", "Automations",
 
     # Mapping & Visualization
@@ -48,6 +51,9 @@ SKILLS_DB = [
 
     # Design & Collaboration Tools
     "Canva", "Figma", "Adobe XD", "Sketch", "Photoshop", "Illustrator",
+
+    # CMS & Website Builders
+    "WordPress", "WooCommerce", "Elementor",
 
     # Architecture / Patterns / Design
     "Microservices", "Monolithic Architecture", "Serverless", "Event-Driven Architecture",
@@ -79,14 +85,16 @@ SKILLS_DB = [
     "Blockchain", "Ethereum", "Solidity", "Smart Contracts",
 
     # Soft Skills
-    "Communication", "Problem Solving","Problem-Solving", "Teamwork", "Leadership",
-    "Adaptability", "Time Management", "Analytical Thinking","Analytical",
+    "Communication", "Problem Solving", "Problem-Solving", "Teamwork", "Leadership",
+    "Adaptability", "Time Management", "Analytical Thinking", "Analytical",
     "Critical Thinking", "Creativity", "Decision Making",
-    "Interpersonal Skills", "Planning", "Mentoring", "Collaboration", "Problem Solver", "Learning Aptitude", "Team Player",
+    "Interpersonal Skills", "Planning", "Mentoring", "Collaboration",
+    "Problem Solver", "Learning Aptitude", "Team Player",
     "Presentation Skills", "Conflict Resolution", "Attention to Detail",
     "Negotiation", "Empathy", "Customer Focus", "Agile Methodologies",
     "Scrum", "Kanban", "Lean", "Project Management", "Stakeholder Management"
 ]
+
 
 # ==============================
 # Education Keywords for JD Parsing

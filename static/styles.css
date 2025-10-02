@@ -119,6 +119,11 @@ header p {
   animation: fadeInUp 0.3s ease forwards;
 }
 
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(16,24,40,0.1);
+}
+
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -311,4 +316,30 @@ footer {
 @keyframes moveGradient {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
+}
+
+.navbar {
+  background: #222;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+}
+.navbar a {
+  color: #ddd;
+  text-decoration: none;
+  font-weight: 500;
+}
+.navbar a:hover {
+  color: #fff;
+}
+.navbar a.active {
+  color: #4cafef;
+  border-bottom: 2px solid #4cafef;
+  padding-bottom: 2px;
 }

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resumes Database</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='data.css') }}">
+</head>
+<body>
+  <div class="container">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex items-center justify-between py-3">
+
+        <!-- Logo / Brand -->
+        <div class="text-xl font-bold tracking-wide">ATS Dashboard</div>
+
+        <!-- Desktop Menu -->
+        <ul class="hidden md:flex space-x-8 text-sm font-medium">
+          <li><a href="/" class="relative py-2 transition hover:text-yellow-300 {% if request.path == '/' %}text-yellow-300{% endif %}">Upload Resumes</a></li>
+          <li><a href="/data" class="relative py-2 transition hover:text-yellow-300 {% if request.path == '/data' %}text-yellow-300{% endif %}">Resume Database</a></li>
+          <li><a href="/jd_parser" class="relative py-2 transition hover:text-yellow-300 {% if request.path == '/jd_parser' %}text-yellow-300{% endif %}">Job Match</a></li>
+        </ul>
+
+        <!-- Hamburger (mobile) -->
+        <button id="menuBtn" class="md:hidden flex flex-col space-y-1 focus:outline-none">
+          <span class="w-6 h-0.5 bg-white transition"></span>
+          <span class="w-6 h-0.5 bg-white transition"></span>
+          <span class="w-6 h-0.5 bg-white transition"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="menuLinks" class="hidden md:hidden bg-white text-gray-700 shadow-lg rounded-b-xl">
+      <ul class="flex flex-col p-4 space-y-3">
+        <li><a href="/" class="block py-2 px-3 rounded-md hover:bg-gray-100 {% if request.path == '/' %}bg-gray-200 font-semibold{% endif %}">Upload Resumes</a></li>
+        <li><a href="/data" class="block py-2 px-3 rounded-md hover:bg-gray-100 {% if request.path == '/data' %}bg-gray-200 font-semibold{% endif %}">Resume Database</a></li>
+        <li><a href="/jd_parser" class="block py-2 px-3 rounded-md hover:bg-gray-100 {% if request.path == '/jd_parser' %}bg-gray-200 font-semibold{% endif %}">Job Match</a></li>
+      </ul>
+    </div>
+  </nav>
+
+    <!-- Page Heading -->
+    <header class="text-center mb-8 px-4 sm:px-0">
+  <h1 class="text-3xl sm:text-4xl font-extrabold drop-shadow-md">
+    <span>🎯</span>
+    <span class="bg-gradient-to-r from-indigo-500 via-purple-600 to-teal-400 text-transparent bg-clip-text">
+      Resumes Database
+    </span>
+  </h1>
+  <p class="text-gray-700 mt-2 sm:mt-3 text-sm sm:text-base">
+    Filter and view all uploaded resumes
+  </p>
+</header>
+
+
+    <!-- Filter Form -->
+    <form method="get" action="/data" class="flex flex-wrap justify-center gap-4 mb-6">
+      <input type="text" name="skill" placeholder="Filter by skill (e.g. Python)"
+             value="{{ skill or '' }}" class="p-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-300">
+      <select name="exp" class="p-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-300">
+        <option value="">Filter by experience</option>
+        {% for i in range(0, 11) %}
+          <option value="{{ i }}" {% if exp and exp|int == i %}selected{% endif %}>{{ i }} year{% if i != 1 %}s{% endif %}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn">Apply Filters</button>
+      <button type="button" class="btn ghost" onclick="window.location.href='/data'">Reset Filters</button>
+    </form>
+
+    <!-- Table -->
+    {% if resumes %}
+      <div class="card table-container overflow-x-auto">
+        <table class="min-w-full border-collapse">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              {% for column in resumes[0].keys() %}
+                <th class="p-4 text-left">{{ column }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in resumes %}
+              <tr class="bg-white even:bg-gray-50 hover:bg-blue-50 transition">
+                {% for column in row.keys() %}
+                  <td class="p-4" data-label="{{ column }}">{{ row[column] }}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-center text-gray-500 italic">No resumes found.</p>
+    {% endif %}
+
+    <footer class="text-center mt-6 text-gray-600 text-sm rounded-lg p-3 bg-white/50 shadow-sm">
+      Built for your ATS project
+    </footer>
+
+  </div>
+</body>
+</html>

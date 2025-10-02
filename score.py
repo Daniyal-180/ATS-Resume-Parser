@@ -40,8 +40,8 @@ def calculate_resume_score(jd_dict, resume):
     elif total_exp < jd_exp:
         exp_score = (total_exp/jd_exp)*100
 
-    # total_score = round(((skills_score + exp_score)/2) * 100, 2)
-    return round(exp_score,2) , round(skills_score,2)
+    total_score = round(((skills_score + exp_score)/2), 2)
+    return round(exp_score,2) , round(skills_score,2), total_score
 
 
 def calculate_scores_for_all_resumes(jd_dict):
@@ -49,16 +49,17 @@ def calculate_scores_for_all_resumes(jd_dict):
     results = []
 
     for resume in resumes:
-        exp_score, skills_score = calculate_resume_score(jd_dict, resume)
+        exp_score, skills_score, total_score = calculate_resume_score(jd_dict, resume)
         results.append({
             "id": resume["id"],   # resume id from DB
             "name": resume.get("name", ""),
             "phone": resume.get("phone", ""),
             "email": resume.get("email", ""),
             "skills_score": skills_score,
-            "experience_score": exp_score
+            "experience_score": exp_score,
+            "total_score": total_score,
         })
 
     # Sort by score descending
-    # results.sort(key=lambda x: x["experience_score"], reverse=True)
+    results.sort(key=lambda x: x["total_score"], reverse=True)
     return results
