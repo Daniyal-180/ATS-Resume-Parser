@@ -147,9 +147,18 @@ def parse_job_description(text: str):
         matches = re.findall(p, text, re.I)
         for match in matches:
             if isinstance(match, tuple):
-                min_exp_list.append(float(match[0]))  # for ranges, take first number
+                try:
+                    min_exp_list.append(float(match[0]))
+                except ValueError:
+                    continue
             else:
-                min_exp_list.append(int(match))
+                if re.search(r"\b(fresher|fresh graduate|entry level)\b", match, re.I):
+                    min_exp_list.append(0)
+                else:
+                    try:
+                        min_exp_list.append(int(match))
+                    except ValueError:
+                        continue
 
     min_experience = min(min_exp_list) if min_exp_list else 0
 
@@ -197,22 +206,48 @@ if __name__ == "__main__":
     #     jd_text = read_docx(file_path)
     # else:
     #     raise ValueError("Unsupported file format. Only PDF and DOCX are allowed.")
-    jd_text = """We Are Hiring – Part-Time / Project-Based Developers 🚀
-We’re looking for talented professionals to join our growing team!
-🔹 Positions Available:
+    jd_text = """About the Role: We are offering an exciting opportunity for a fresher to join our team as a Data Analyst Intern. This is a paid internship program that will provide you with valuable hands-on experience, mentorship from senior team members, and the potential to transition into a permanent full-time role based on performance.
 
-Frontend Developer
-Technology Stack: React Native
-Backend Developer
-Technology Stack: PHP (Laravel), Python
-📌 Requirements:
+As a Data Analyst Intern, you will be involved in supporting data-driven decision-making by gathering, analysing, and presenting insights through various tools and platforms. If you have a passion for data, problem-solving, and driving business outcomes, we encourage you to apply.
 
-Minimum 1.5 – 2 years of relevant experience
-Minimum Education: BSCS or equivalent
-Salary: Hourly (discussed in interview)
-Work Mode: Remote / On-site (to be decided in interview)
-If you’re passionate about coding and want to work on exciting projects, we’d love to hear from you!
-👉 Apply now by sharing your CV in the comments or sending us a direct message.
-#hiring #frontend #backend #reactnative #laravel #python #developers #jobs"""
+Key Responsibilities:
+
+Assist in maintaining and developing Power BI dashboards
+Perform day-to-day ad-hoc requests and client reporting
+Perform analysis on key performance indicators (KPIs)
+Work closely with Senior Analysts to gain exposure to data processing, reporting, and analytics
+Provide data-driven insights to support business decisions
+Clean and organize data from various sources, ensuring accuracy and attention to detail
+Support the team in creating visually appealing and informative reports and presentations
+Learn to automate reports using Excel, SQL, and Power BI
+
+Requirements
+
+Qualifications & Requirements:
+
+Strong Skills in:
+Microsoft Excel (pivot tables, VLOOKUP / XLOOKUP, data visualization, etc.)
+Power BI (basic dashboard development and maintenance)
+SQL (basic querying skills)
+Basic knowledge of maintaining and developing Power BI dashboards
+Demonstrated attention to detail and problem-solving skills
+Strong communication skills, both verbal and written
+Ability to handle and analyse data, identify trends, and provide insights
+Fresh graduates or individuals new to the field are encouraged to apply
+ Preferred: Certifications in Excel, Power BI, or SQL will be an added advantage
+
+What We Offer:
+
+A structured internship with the opportunity to transition into a full-time Data Analyst role
+Hands-on training and mentorship from Senior Business Intelligence Analyst
+Exposure to real-world business data and analytics projects
+A dynamic and collaborative work environment
+The chance to work on meaningful projects that impact key business decisions
+
+Why Join Us:
+
+Opportunity to learn and grow in a fast-paced environment
+Gain practical experience working with industry-standard tools and techniques
+Build a solid foundation in data analytics and business intelligence"""
     result = parse_job_description(jd_text)
     print(result)
